@@ -1,0 +1,18 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject IAuthService AuthService
+
+<AuthorizeView>
+    <Authorized>
+        <a href="/profile">Hello, @context.User.Identity?.Name!</a>
+        <a href="/logout">Log out</a>
+    </Authorized>
+    <NotAuthorized>
+        <a href="/register">Register</a>
+        <a href="/login">Log in</a>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code{
+
+}

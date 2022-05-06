@@ -1,0 +1,52 @@
+﻿@page "/login"
+@inject IAuthService AuthService
+@inject NavigationManager NavManager
+
+<PageTitle>Login</PageTitle>
+
+@if (ShowErrors)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>@Error</p>
+    </div>
+}
+
+
+<EditForm Model="loginDto" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label for="email">Email</label>
+        <InputText id="email" @bind-Value="loginDto.Email" class="form-control" />
+        <ValidationMessage For="@(() => loginDto.Email)" />
+    </div>
+    <div class="mb-3">
+        <label for="password">Password</label>
+        <InputText id="password" @bind-Value="loginDto.Password" class="form-control" type="password" />
+        <ValidationMessage For="@(() => loginDto.Password)" />
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+</EditForm>
+
+@code {
+    private LoginDto loginDto = new LoginDto();
+    private bool ShowErrors;
+    private string Error = "";
+    bool isShow;
+
+    private async Task HandleLogin() {
+        ShowErrors = false;
+
+        var result = await AuthService.Login(loginDto);
+
+        if (result.Success)
+        {
+            var returnUrl = NavManager.QueryString("returnUrl") ?? "/";
+            NavManager.NavigateTo(returnUrl);
+        }
+        else
+        {
+            ShowErrors = true;
+            Error = result.Message;
+        }
+    }
+}
